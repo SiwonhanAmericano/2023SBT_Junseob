@@ -12,6 +12,9 @@ boxplot(finedust$`3_fine dust`,main="야식업의 2020년 1월 미세먼지 발�
 
 boxplot(finedust$`3_fine dust`,finedust$`7_fine dust`, main="업종별 2020년 1월 미세먼지 발생현황", col="yellow", names = c("야식업","중식"))
 
+#기술통계결과
+#3_fine dust   
+#Min.   :22.00  1st Qu.:40.25  Median :45.50  Mean   :49.42  3rd Qu.:66.50  Max.   :73.50 
 
 
 #산점도
