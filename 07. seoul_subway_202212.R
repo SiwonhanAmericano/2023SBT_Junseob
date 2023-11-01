@@ -21,8 +21,7 @@ table(subway$Line)
 
 table(subway$Station) #가오리역이 있는지? 직접 확인해보자
 
-subway$total_passenger<-subway$on_board+subway$getting_off#
-total_passenger#
+subway$total_passenger <- subway$on_board+subway$getting_off
 
 str(subway)
 
@@ -56,7 +55,7 @@ subway %>%
   head(3) # 도출된 일자의 요일을 파악해보자
 
 subway %>%
-  filter(Line=="4호선") %>% #호선을 바꾸어 왜 그 날에 많았는지 유추해보자
+  filter(Line=="9호선") %>% #호선을 바꾸어 왜 그 날에 많았는지 유추해보자
   filter(total_passenger==max(total_passenger)) %>%
   select(Date, Station, on_board,
          getting_off, total_passenger)
@@ -70,7 +69,7 @@ line_pct <- subway %>%
 
 line_pct %>%
   arrange(desc(pct)) %>%
-  head(3) #어느 역을 가장 많이 사용했나요?
+  head(5) #어느 역을 가장 많이 사용했나요?
 
 
 

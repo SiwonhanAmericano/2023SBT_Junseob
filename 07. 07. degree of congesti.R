@@ -53,18 +53,49 @@ ggplot(data=congestion_line,
   geom_col()+
   coord_flip()
 
+congestion_line
 
 #4.지하철 호선별 출근시간(07:00~09:00)대의 평균혼잡도
 congestion1$day_mean_gtw <-
-  rowMeans(congestion1[,c('s0700','s0730','s0800','s0830','s0900')])
+  rowMeans(congestion1[,c('s0800','s0830','s0900')])
 congestion1$day_mean_gtw
 mean(congestion1$day_mean_gtw)
+
+#07시 계산
+congestion1$day_mean_gtw_7 <-
+  rowMeans(congestion1[c('s0700')])
+mean(congestion1$day_mean_gtw_7)
+summary(congestion1$day_mean_gtw_7)
+
+#07시 30분 계산
+congestion1$day_mean_gtw_7.5 <-
+  rowMeans(congestion1[c('s0730')])
+mean(congestion1$day_mean_gtw_7.5)
+summary(congestion1$day_mean_gtw_7.5)
+
+#08시 계산
+congestion1$day_mean_gtw_8 <-
+  rowMeans(congestion1[c('s0800')])
+mean(congestion1$day_mean_gtw_8)
+summary(congestion1$day_mean_gtw_8)
+
+#08시 30분 계산
+congestion1$day_mean_gtw_8.5 <-
+  rowMeans(congestion1[c('s0830')])
+mean(congestion1$day_mean_gtw_8.5)
+summary(congestion1$day_mean_gtw_8.5)
+
+#09시 계산
+congestion1$day_mean_gtw_9 <-
+  rowMeans(congestion1[c('s0900')])
+mean(congestion1$day_mean_gtw_9)
+summary(congestion1$day_mean_gtw_9)
 
 congestion_line_gtw <-congestion1 %>%
   group_by(line) %>%
   summarise(mg=mean(day_mean_gtw)) %>%
   arrange(desc(mg)) %>%
-  head(8)
+  head(4)
 
 ggplot(data=congestion_line_gtw,
        aes(x=reorder(line, mg),y=mg))+
@@ -86,10 +117,18 @@ congestion1 %>%
   arrange(desc(pct))%>%
   head(5)
 
-#6.지하철 호선별 퇴근시간(18:00~20:00)대의 
+congestion1 %>%
+  mutate(s80_grade=ifelse(s0800<=80, "good", ifelse(s0800<=130, "normal", ifelse(s0800<=150, "caution", "bad"))))%>%
+  group_by(line, s80_grade) %>%
+  summarise(n=n())%>%
+  mutate(total=sum(n), pct=round(n/total*100,1))%>%
+  filter(s80_grade=="caution")%>%
+  select(line, s80_grade,n,pct)%>%  arrange(desc(pct))%>%  head(5)
 
+#6.지하철 호선별 퇴근시간(18:00~20:00)대의 혼잡도도
+#18:00~19:00로 수정해 계산함
 congestion1$day_mean_gow <-
-  rowMeans(congestion1[,c('s1800','s1830','s1900','s1930','s2000')])
+  rowMeans(congestion1[,c('s1800','s1830','s1900')])
 congestion1$day_mean_gow
 mean(congestion1$day_mean_gow)
 
@@ -107,6 +146,38 @@ ggplot(data=congestion_line_gow,
   ylab("평균 혼잡도")+
   coord_flip()
 
+#18시 계산
+congestion1$day_mean_gow_18 <-
+  rowMeans(congestion1[c('s1800')])
+mean(congestion1$day_mean_gow_18)
+summary(congestion1$day_mean_gow_18)
+
+#18시 30분 계산
+congestion1$day_mean_gow_18.5 <-
+  rowMeans(congestion1[c('s1830')])
+mean(congestion1$day_mean_gow_18.5)
+summary(congestion1$day_mean_gow_18.5)
+
+#19시 계산
+congestion1$day_mean_gow_19 <-
+  rowMeans(congestion1[c('s1900')])
+mean(congestion1$day_mean_gow_19)
+summary(congestion1$day_mean_gow_19)
+
+#19시 30분 계산
+congestion1$day_mean_gow_19.5 <-
+  rowMeans(congestion1[c('s1930')])
+mean(congestion1$day_mean_gow_19.5)
+summary(congestion1$day_mean_gow_19.5)
+
+#20시 계산
+congestion1$day_mean_gow_20 <-
+  rowMeans(congestion1[c('s2000')])
+mean(congestion1$day_mean_gow_20)
+summary(congestion1$day_mean_gow_20)
+
+
+
 #7.출발시간 18시의 지하철 혼잡도 범주화/범주별 빈도분석
 
 congestion1 %>%
@@ -116,5 +187,15 @@ congestion1 %>%
   mutate(total=sum(n), pct=round(n/total*100,1))%>%
   filter(s18_grade=="caution")%>%
   select(s18_grade,n,pct)%>%
+  arrange(desc(pct))%>%
+  head(5)
+
+congestion1 %>%
+  mutate(s18_grade=ifelse(s1800<=80, "good", ifelse(s1800<=130, "normal", ifelse(s1800<=150, "caution", "bad"))))%>%
+  group_by(line, s18_grade) %>%
+  summarise(n=n())%>%
+  mutate(total=sum(n), pct=round(n/total*100,1))%>%
+  filter(s18_grade=="caution")%>%
+  select(line, s18_grade,n,pct)%>%
   arrange(desc(pct))%>%
   head(5)
